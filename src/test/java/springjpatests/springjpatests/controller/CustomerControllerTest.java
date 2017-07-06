@@ -57,8 +57,6 @@ public class CustomerControllerTest {
                 .generate(()-> new Customer(UUID.randomUUID(), faker.name().firstName()))
                 .limit(GENERATED_CUSTOMERS_COUNT)
                 .collect(Collectors.toList());
-
-        customers.forEach(System.out::println);
     }
 
     @Test

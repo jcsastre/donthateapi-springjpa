@@ -57,13 +57,19 @@ public class CustomerController {
         UriComponentsBuilder ucBuilder
     ) {
 
+        //TODO: this code should not be in the controller
+        UUID validUuid = null;
+        while (validUuid == null) {
+            UUID uuid = UUID.randomUUID();
+            if (!customerService.exists(uuid)) {
+                validUuid = uuid;
+            }
+        }
+
         final Customer customer = new Customer(
-            UUID.randomUUID(),
+            validUuid,
             customerRestDto.getFirstName()
         );
-
-        if (customerService.exists(customer))
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         customerService.save(customer);
 

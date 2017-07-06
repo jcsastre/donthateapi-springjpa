@@ -17,5 +17,5 @@ public interface CustomerService {
 
     Customer save(Customer customer);
 
-    boolean exists(Customer customer);
+    boolean exists(UUID id);
 }

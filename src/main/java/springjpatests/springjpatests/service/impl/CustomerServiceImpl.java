@@ -42,9 +42,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean exists(Customer customer) {
+    public boolean exists(UUID id) {
 
         return
-            findOne(customer.getId()).isPresent();
+            findOne(id).isPresent();
     }
 }

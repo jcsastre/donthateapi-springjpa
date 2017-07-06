@@ -55,6 +55,11 @@
             <version>1.16.18</version>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+			<groupId>com.github.npathai</groupId>
+			<artifactId>hamcrest-optional</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
