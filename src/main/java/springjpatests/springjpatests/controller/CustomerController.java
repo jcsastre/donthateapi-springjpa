@@ -1,13 +1,13 @@
 package springjpatests.springjpatests.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import springjpatests.springjpatests.repository.CustomerRepository;
+import springjpatests.springjpatests.dto.CustomerRestDto;
 import springjpatests.springjpatests.model.Customer;
+import springjpatests.springjpatests.service.CustomerService;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,17 +21,16 @@ import java.util.UUID;
 @RequestMapping("/customers")
 public class CustomerController {
 
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
-    @Autowired
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Customer>> getAllCustomers() {
 
-        final List<Customer> customers = customerRepository.findAll();
+        final List<Customer> customers = customerService.findAll();
 
         if (customers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -43,21 +42,30 @@ public class CustomerController {
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public ResponseEntity<Customer> getOneCustomer(@PathVariable String id) {
 
-        final Customer customer = customerRepository.findOne(Long.valueOf(id));
+        final Optional<Customer> optionalCustomer = customerService.findOne(UUID.fromString(id));
 
-        if (customer != null) {
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return optionalCustomer.map(
+            customer -> new ResponseEntity<>(customer, HttpStatus.OK)
+        ).orElseGet(
+            () -> new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        );
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> create(
-        @RequestBody Customer customer,
+    public ResponseEntity<Void> createOneCustomer(
+        @RequestBody CustomerRestDto customerRestDto,
         UriComponentsBuilder ucBuilder
     ) {
-        customerRepository.save(customer);
+
+        final Customer customer = new Customer(
+            UUID.randomUUID(),
+            customerRestDto.getFirstName()
+        );
+
+        if (customerService.exists(customer))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        customerService.save(customer);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(

@@ -7,11 +7,10 @@ import springjpatests.springjpatests.model.Customer;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author: Juan Carlos Sastre
  */
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
-
-    List<Customer> findByFirstName(String firstName);
+public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 }
