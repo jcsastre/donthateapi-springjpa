@@ -54,7 +54,13 @@ public class CustomerControllerTest {
 
         customers =
             Stream
-                .generate(()-> new Customer(UUID.randomUUID(), faker.name().firstName()))
+                .generate(
+                    ()-> new Customer(
+                            UUID.randomUUID(),
+                            faker.name().firstName(),
+                            faker.name().lastName()
+                    )
+                )
                 .limit(GENERATED_CUSTOMERS_COUNT)
                 .collect(Collectors.toList());
     }

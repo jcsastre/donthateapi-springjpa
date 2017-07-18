@@ -11,4 +11,5 @@ import java.util.UUID;
  */
 @Value public class CustomerRestDto {
     private String firstName;
+    private String lastName;
 }

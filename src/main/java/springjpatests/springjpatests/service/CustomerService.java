@@ -15,7 +15,7 @@ public interface CustomerService {
 
     List<Customer> findAll();
 
-    Customer save(Customer customer);
+    Customer save(String firstName, String lastName);
 
     boolean exists(UUID id);
 }

@@ -1,6 +1,7 @@
 package springjpatests.springjpatests.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import springjpatests.springjpatests.model.Customer;
 import springjpatests.springjpatests.repository.CustomerRepository;
 import springjpatests.springjpatests.service.CustomerService;
@@ -36,9 +37,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer save(Customer customer) {
+    public Customer save(String firstName, String lastName) {
+
+        Assert.notNull(firstName, "firstName is mandatory.");
+        Assert.notNull(lastName, "lastName is mandatory.");
+
+        UUID validUuid = null;
+        while (validUuid == null) {
+            UUID uuid = UUID.randomUUID();
+            if (exists(uuid)) {
+                validUuid = uuid;
+            }
+        }
+
         return
-            customerRepository.save(customer);
+            customerRepository.save(
+                new Customer(
+                    validUuid,
+                    firstName,
+                    lastName
+                )
+            );
     }
 
     @Override

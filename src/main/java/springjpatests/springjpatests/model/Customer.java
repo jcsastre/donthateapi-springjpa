@@ -18,5 +18,6 @@ public class Customer {
     @Id
     private UUID id;
 
-    private String firstName;
+    @NonNull private String firstName;
+    @NonNull private String lastName;
 }

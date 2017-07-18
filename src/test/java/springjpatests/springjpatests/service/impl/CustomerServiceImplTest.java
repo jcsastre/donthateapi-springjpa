@@ -48,7 +48,11 @@ public class CustomerServiceImplTest {
         customers =
             Stream
                 .generate(
-                    ()-> new Customer(UUID.randomUUID(), faker.name().firstName())
+                    ()-> new Customer(
+                        UUID.randomUUID(),
+                        faker.name().firstName(),
+                        faker.name().lastName()
+                    )
                 )
                 .limit(GENERATED_CUSTOMERS_COUNT)
                 .collect(Collectors.toList());

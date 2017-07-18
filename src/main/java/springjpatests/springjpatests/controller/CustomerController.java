@@ -27,7 +27,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers() {
 
         final List<Customer> customers = customerService.findAll();
@@ -39,7 +39,7 @@ public class CustomerController {
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @GetMapping(value = "{id}")
     public ResponseEntity<Customer> getOneCustomer(@PathVariable String id) {
 
         final Optional<Customer> optionalCustomer = customerService.findOne(UUID.fromString(id));
@@ -51,27 +51,16 @@ public class CustomerController {
         );
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Void> createOneCustomer(
         @RequestBody CustomerRestDto customerRestDto,
         UriComponentsBuilder ucBuilder
     ) {
 
-        //TODO: this code should not be in the controller
-        UUID validUuid = null;
-        while (validUuid == null) {
-            UUID uuid = UUID.randomUUID();
-            if (!customerService.exists(uuid)) {
-                validUuid = uuid;
-            }
-        }
-
-        final Customer customer = new Customer(
-            validUuid,
-            customerRestDto.getFirstName()
+        final Customer customer = customerService.save(
+            customerRestDto.getFirstName(),
+            customerRestDto.getLastName()
         );
-
-        customerService.save(customer);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(
